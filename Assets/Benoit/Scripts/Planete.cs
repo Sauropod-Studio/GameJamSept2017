@@ -26,8 +26,18 @@ public class Planete : MonoBehaviour
         var d = p - transform.position;
         var dFar = d*100;
         var pFar = transform.position + dFar;
-        if (Physics.Raycast(new Ray(pFar, -dFar), out hit, dFar.magnitude, 1 << LayerMask.NameToLayer("Planete")))
+        if (Physics.Raycast(new Ray(pFar, -dFar), out hit, dFar.magnitude, 1 << GameLayers.Planete))
             return dFar.magnitude - hit.distance;
         return 0;
+    }
+
+    public RaycastHit RaycastTerrain(Vector3 p)
+    {
+        RaycastHit hit;
+        var d = p - transform.position;
+        var dFar = d * 100;
+        var pFar = transform.position + dFar;
+        Physics.Raycast(new Ray(pFar, -dFar), out hit, dFar.magnitude, 1 << GameLayers.Planete);
+        return hit;
     }
 }

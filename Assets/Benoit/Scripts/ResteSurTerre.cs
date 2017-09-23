@@ -25,8 +25,6 @@ public class ResteSurTerre : MonoBehaviour
     {
         if (transform.parent != Planete.Objets)
         {
-            Rigidbody.velocity = Vector3.zero;
-            Rigidbody.isKinematic = true;
             return;
         }
 
@@ -34,7 +32,6 @@ public class ResteSurTerre : MonoBehaviour
         {
             var delta = (transform.position - Planete.transform.position);
             Rigidbody.velocity = Gravite*-delta.normalized;
-            Rigidbody.isKinematic = false;
             return;
         }
 

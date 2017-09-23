@@ -49,13 +49,17 @@ public class MontgolfiereRamasse : MonoBehaviour
         }
 
         bestObject.SetParent(Crochet);
-        bestObject.localPosition = -Vector3.up * bestObject.GetComponent<Collider>().bounds.size.y / 2;
+        var bounds = bestObject.GetComponent<Collider>().bounds;
+        bestObject.localPosition = -Vector3.up * bounds.size.y / 2;
+        if (bestObject.GetComponent<Rigidbody>())
+            bestObject.GetComponent<Rigidbody>().isKinematic = true;
     }
 
     bool IsOverWater()
     {
         var d = Planete.transform.position - transform.position;
-        return Physics.Raycast(new Ray(transform.position, d), d.magnitude, 1 << LayerMask.NameToLayer("Water"));
+        RaycastHit hit;
+        return Physics.Raycast(new Ray(transform.position, d), out hit, d.magnitude, 1 << GameLayers.Ocean | 1 << GameLayers.Planete) && hit.transform.gameObject.layer == GameLayers.Ocean;
     }
 
     void Drop()
@@ -63,6 +67,11 @@ public class MontgolfiereRamasse : MonoBehaviour
         foreach (Transform child in Crochet)
         {
             child.SetParent(Planete.Objets);
+            if (child.GetComponent<Rigidbody>())
+            {
+                child.GetComponent<Rigidbody>().isKinematic = false;
+                child.GetComponent<Rigidbody>().velocity = Vector3.zero;
+            }
         }
     }
 }
