@@ -2,51 +2,51 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[ExecuteInEditMode]
+//[ExecuteInEditMode]
 public class ResteSurTerre : MonoBehaviour
 {
     [HideInInspector]
-    public Transform Planete;
+    public Planete Planete;
+
     [HideInInspector]
-    public float Radius;
+    public Rigidbody Rigidbody;
 
     public float Profondeur = 0.1f;
+    public float DistanceAcceptable = 0.1f;
+    public float Gravite = 1f;
 
     void Start()
     {
-        Planete = GameObject.Find("Planete").transform;
-        Radius = Planete.localScale.x/2;
+        Planete = FindObjectOfType<Planete>();
+        Rigidbody = GetComponent<Rigidbody>();
     }
 
     void Update()
     {
-        if (transform.parent != Planete)
+        if (transform.parent != Planete.Objets)
+        {
+            Rigidbody.velocity = Vector3.zero;
+            Rigidbody.isKinematic = true;
             return;
+        }
+
+        if (!ToucheAuSol())
+        {
+            var delta = (transform.position - Planete.transform.position);
+            Rigidbody.velocity = Gravite*-delta.normalized;
+            Rigidbody.isKinematic = false;
+            return;
+        }
 
         Vector3 up;
-        transform.position = GetPointSurTerre(transform.position, out up);
+        transform.position = Planete.GetPointSurTerre(transform.position, out up, -Profondeur);
         transform.rotation = Quaternion.LookRotation(transform.forward - Vector3.Project(transform.forward, up), up);
     }
 
-    public Vector3 GetPointSurTerre(Vector3 pointDansLEspace)
+    public bool ToucheAuSol()
     {
-        Vector3 up;
-        return GetPointSurTerre(pointDansLEspace, out up);
-    }
-
-    public Vector3 GetPointSurTerre(Vector3 pointDansLEspace, out Vector3 up)
-    {
-        var v = pointDansLEspace - Planete.position;
-        up = v.normalized;
-        v = up * (Radius - Profondeur);
-        return Planete.position + v;
-    }
-
-    public static Vector3 GetPointSurTerre(Transform planete, float radius, Vector3 pointDansLEspace)
-    {
-        var v = pointDansLEspace - planete.position;
-        var up = v.normalized;
-        v = up * radius;
-        return planete.position + v;
+        var d = (transform.position - Planete.transform.position);
+        var dMax = (Planete.RadiusAt(transform.position) + DistanceAcceptable);
+        return d.sqrMagnitude <= dMax*dMax;
     }
 }

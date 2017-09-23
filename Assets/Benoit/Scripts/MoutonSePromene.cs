@@ -5,7 +5,10 @@ using UnityEngine;
 public class MoutonSePromene : MonoBehaviour
 {
     [HideInInspector]
-    public Transform Planete;
+    public Planete Planete;
+
+    [HideInInspector]
+    public ResteSurTerre ResteSurTerre;
 
     public float AttenteMoyenne = 1f;
     public float DeplacementMoyen = 3f;
@@ -19,14 +22,15 @@ public class MoutonSePromene : MonoBehaviour
 
     void Start()
     {
-        Planete = GameObject.Find("Planete").transform;
+        Planete = FindObjectOfType<Planete>();
+        ResteSurTerre = GetComponent<ResteSurTerre>();
         InitPositionDeReference();
         RandomDestination();
     }
 
 	void Update()
 	{
-	    if (transform.parent != Planete)
+	    if (transform.parent != Planete.Objets || !ResteSurTerre.ToucheAuSol())
 	    {
 	        InitPositionDeReference();
             return;
@@ -53,7 +57,7 @@ public class MoutonSePromene : MonoBehaviour
 
     void InitPositionDeReference()
     {
-        _positionDebut = GetComponent<ResteSurTerre>().GetPointSurTerre(transform.position);
+        _positionDebut = Planete.GetPointSurTerre(transform.position);
     }
 
     bool WantToMove()
@@ -101,7 +105,7 @@ public class MoutonSePromene : MonoBehaviour
         _attente = Random.Range(AttenteMoyenne * 0.5f, AttenteMoyenne * 1.5f);
         _destination = _positionDebut + Random.insideUnitSphere * Random.Range(DeplacementMoyen * 0.5f, DeplacementMoyen * 1.5f);
         Vector3 up;
-        _destination = GetComponent<ResteSurTerre>().GetPointSurTerre(_destination, out up);
+        _destination = Planete.GetPointSurTerre(_destination, out up);
         _rotationVoulue = Quaternion.LookRotation(_destination - transform.position, up);
     }
 }

@@ -5,12 +5,13 @@ using UnityEngine;
 public class MontgolfiereRamasse : MonoBehaviour
 {
     [HideInInspector]
-    public Transform Planete;
+    public Planete Planete;
     public Transform Crochet;
+    public GameObject GrosseGoutteDEauPrefab;
 
     void Start()
     {
-        Planete = GameObject.Find("Planete").transform;
+        Planete = FindObjectOfType<Planete>();
     }
 
 	void Update()
@@ -27,26 +28,41 @@ public class MontgolfiereRamasse : MonoBehaviour
     void Grab()
     {
         Transform bestObject = null;
-        var bestDistance = Mathf.Infinity;
-        foreach (Transform child in Planete)
+
+        if (IsOverWater())
         {
-            if (child == transform) continue;
-            var dist = Vector3.Distance(child.position, transform.position);
-            if (dist < bestDistance)
+            bestObject = Instantiate(GrosseGoutteDEauPrefab).transform;
+        }
+        else
+        {
+            var bestDistance = Mathf.Infinity;
+            foreach (Transform child in Planete.Objets)
             {
-                bestDistance = dist;
-                bestObject = child;
+                if (child == transform) continue;
+                var dist = Vector3.Distance(child.position, transform.position);
+                if (dist < bestDistance)
+                {
+                    bestDistance = dist;
+                    bestObject = child;
+                }
             }
         }
+
         bestObject.SetParent(Crochet);
         bestObject.localPosition = -Vector3.up * bestObject.GetComponent<Collider>().bounds.size.y / 2;
+    }
+
+    bool IsOverWater()
+    {
+        var d = Planete.transform.position - transform.position;
+        return Physics.Raycast(new Ray(transform.position, d), d.magnitude, 1 << LayerMask.NameToLayer("Water"));
     }
 
     void Drop()
     {
         foreach (Transform child in Crochet)
         {
-            child.SetParent(Planete);
+            child.SetParent(Planete.Objets);
         }
     }
 }
