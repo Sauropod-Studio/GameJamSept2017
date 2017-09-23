@@ -5,7 +5,7 @@ using UnityEngine;
 public class RegarderAvecLesPieds : MonoBehaviour {
     public Vector3 Referent;
     public float hauteurVoulue;
-    public LayerMask masque = 1 << 8;
+    public LayerMask masque = 1 << 8 + 1 << 4;
 	// Update is called once per frame
 	void Update () {
         var orientationLocale = transform.InverseTransformPoint(Referent);
@@ -14,7 +14,7 @@ public class RegarderAvecLesPieds : MonoBehaviour {
         var rigidbody = GetComponent<Rigidbody>();
         //rigidbody.velocity += -transform.position.normalized * (Vector3.Distance(transform.position, Vector3.zero) - hauteurVoulue) * 0.1f;
 
-        var gravite = (Referent - transform.position).normalized * 0.1f;
+        var gravite = (Referent - transform.position).normalized * 0.05f;
         if (Physics.Raycast(transform.position, gravite, hauteurVoulue,masque))
         {
             rigidbody.velocity -= gravite;
