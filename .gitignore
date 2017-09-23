@@ -1,0 +1,77 @@
+# Unity3D .gitignore file.
+#	 Store this file at the root of your local repository.
+#
+#OS Files
+.DS_Store
+#Temporary Folders/Files
+ModulesCache
+Library
+Plugins
+Temp
+*.pidb
+build
+*.pidb
+*.sln
+*.sln.DotSettings
+*.userprefs
+*.user
+*.suo
+*.csproj
+*.unityproj
+*.luaproj
+*.log.json
+*.ruleset
+license.dat
+
+#Game stuff
+/Assets/StreamingAssets
+/Assets/StreamingAssets.meta
+/Assets/IndexedResources/TempGab/
+/Assets/LocalPlugins/
+/Assets/LocalPlugins.meta
+/Assets/Tests Benoit/
+/Assets/Tests Benoit.meta
+/Info/Sauvegarde/
+/Info/Saves/
+#Info/Maps/
+/Info/Maps/Map bossue/
+/Info/Maps/MondeAFX/
+/Info/Maps/Tit map nombre/
+/Info/Maps/Heightmap/
+/Info/UGC/
+/Info/Downloads/
+/Info/Maps/HeightmapIsland/
+/Info/Partage/
+/Info/Untracked/
+/Info/Settings.txt
+/Info/Castlestory.config
+/Info/game_analytics_events.json
+/Info/logging.xml
+/Info/UserSettings/Current.json
+/Info/Workshop/
+/Info/Backups/
+/obj/
+/steam_api.dll
+/venv/
+/Builds/
+/Shell/
+/brix-build/
+/brix-core/
+/Logs/
+*.log
+*.orig
+Bin/wget/log.txt
+*.sublime-project
+
+*.sublime-workspace
+
+*.todo
+.svn/
+svn_info.json
+Info/timestamp.txt
+Info/TestSetting.json
+Info/Lua/Gamemodes/MegaSurvival/
+Info/test_result.txt
+Info/pause.txt
+project.lock.json
+Info/stats.json
