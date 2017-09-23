@@ -1,0 +1,24 @@
+fileFormatVersion: 2
+guid: 18a237885a6af95439693ad2178c5be7
+timeCreated: 1506189973
+licenseType: Free
+TrueTypeFontImporter:
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontName: Futura Std
+  fontNames:
+  - Futura Std
+  fallbackFontReferences:
+  - {fileID: 12800000, guid: 0febc331d42e6a946a8d1eef15204850, type: 3}
+  - {fileID: 12800000, guid: 13a97dc42dd55804a8261d98e8e70f1f, type: 3}
+  - {fileID: 12800000, guid: 130fb2f414336f54da8b03e60e91a2eb, type: 3}
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
