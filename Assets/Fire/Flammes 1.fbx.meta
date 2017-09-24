@@ -1,24 +1,29 @@
 fileFormatVersion: 2
-guid: b0bc90286c266584385ae7fa0e13e65c
-timeCreated: 1506187277
-licenseType: Pro
+guid: adf5fbbfef423024ba0ad6850abd8f68
+timeCreated: 1506221283
+licenseType: Free
 ModelImporter:
   serializedVersion: 19
   fileIDToRecycleName:
-    100000: Ocean
-    100002: Planet
-    100004: //RootNode
-    400000: Ocean
-    400002: Planet
-    400004: //RootNode
-    2300000: Ocean
-    2300002: Planet
-    3300000: Ocean
-    3300002: Planet
-    4300000: Planet
-    4300002: Ocean
+    100000: Flame1
+    100002: Flame2
+    100004: Flame3
+    100006: //RootNode
+    400000: Flame1
+    400002: Flame2
+    400004: Flame3
+    400006: //RootNode
+    2300000: Flame1
+    2300002: Flame2
+    2300004: Flame3
+    3300000: Flame1
+    3300002: Flame2
+    3300004: Flame3
+    4300000: Flame1
+    4300002: Flame2
+    4300004: Flame3
   materials:
-    importMaterials: 0
+    importMaterials: 1
     materialName: 0
     materialSearch: 1
   animations:
@@ -43,7 +48,7 @@ ModelImporter:
     isReadable: 1
   meshes:
     lODScreenPercentages: []
-    globalScale: 1
+    globalScale: 0.5
     meshCompression: 0
     addColliders: 0
     importBlendShapes: 1
@@ -52,16 +57,16 @@ ModelImporter:
     useFileUnits: 1
     optimizeMeshForGPU: 1
     keepQuads: 0
-    weldVertices: 0
+    weldVertices: 1
     secondaryUVAngleDistortion: 8
     secondaryUVAreaDistortion: 15.000001
     secondaryUVHardAngle: 88
     secondaryUVPackMargin: 4
-    useFileScale: 1
+    useFileScale: 0
   tangentSpace:
-    normalSmoothAngle: 40
+    normalSmoothAngle: 60
     normalImportMode: 0
-    tangentImportMode: 0
+    tangentImportMode: 3
   importAnimation: 1
   copyAvatar: 0
   humanDescription:

@@ -8,6 +8,9 @@ public class MontgolfiereRamasse : MonoBehaviour
     public Planete Planete;
     public Transform Crochet;
     public GameObject GrosseGoutteDEauPrefab;
+    private bool _whantsToPick;
+    private float _timeToPick;
+    private bool _whantToDrop;
 
     void Start()
     {
@@ -16,14 +19,30 @@ public class MontgolfiereRamasse : MonoBehaviour
 
 	void Update()
     {
+        if (_whantToDrop)
+        {
+            Drop();
+            _whantToDrop = false;
+        }
 	    if (Input.GetKeyDown(KeyCode.Space))
 	    {
-	        if (Crochet.childCount == 0)
-	            Grab();
-	        else
-	            Drop();
+            if (Crochet.childCount == 0)
+            {
+                if (_whantsToPick == false)
+                {
+                    _whantsToPick = true;
+                    _timeToPick = Time.time + 1.4f;
+                }
+            }
+            else
+                _whantToDrop = true;
 	    }
-	}
+        if (_whantsToPick && Time.time > _timeToPick)
+        {
+            Grab();
+            _whantsToPick = false;
+        }
+    }
 
     void Grab()
     {
@@ -40,12 +59,14 @@ public class MontgolfiereRamasse : MonoBehaviour
             {
                 if (child == transform) continue;
                 var dist = Vector3.Distance(child.position, transform.position);
-                if (dist < bestDistance)
+                if (dist < bestDistance && dist < 4f)
                 {
                     bestDistance = dist;
                     bestObject = child;
                 }
             }
+            if (bestObject == null)
+                return;
         }
 
         bestObject.SetParent(Crochet);
@@ -53,6 +74,8 @@ public class MontgolfiereRamasse : MonoBehaviour
         bestObject.localPosition = -Vector3.up * (bounds.max.y - bestObject.transform.position.y);
         if (bestObject.GetComponent<Rigidbody>())
             bestObject.GetComponent<Rigidbody>().isKinematic = true;
+        Physics.IgnoreCollision(bestObject.GetComponent<Collider>(),GetComponentInParent<Collider>());
+        //bestObject.GetComponent<Collider>().enabled = false;
     }
 
     bool IsOverWater()
@@ -70,7 +93,9 @@ public class MontgolfiereRamasse : MonoBehaviour
             if (child.GetComponent<Rigidbody>())
             {
                 child.GetComponent<Rigidbody>().isKinematic = false;
-                child.GetComponent<Rigidbody>().velocity = Vector3.zero;
+                child.GetComponent<Rigidbody>().velocity = GetComponentInParent<Rigidbody>().velocity;
+                //child.GetComponent<Collider>().enabled = true;
+                Physics.IgnoreCollision(child.GetComponent<Collider>(), GetComponentInParent<Collider>(),false);
             }
         }
     }
