@@ -50,7 +50,7 @@ public class MontgolfiereRamasse : MonoBehaviour
 
         bestObject.SetParent(Crochet);
         var bounds = bestObject.GetComponent<Collider>().bounds;
-        bestObject.localPosition = -Vector3.up * bounds.size.y / 2;
+        bestObject.localPosition = -Vector3.up * (bounds.max.y - bestObject.transform.position.y);
         if (bestObject.GetComponent<Rigidbody>())
             bestObject.GetComponent<Rigidbody>().isKinematic = true;
     }
