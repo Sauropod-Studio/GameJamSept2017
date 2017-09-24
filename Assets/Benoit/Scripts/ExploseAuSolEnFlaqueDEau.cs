@@ -12,17 +12,26 @@ public class ExploseAuSolEnFlaqueDEau : MonoBehaviour
 
     public float ToleranceCouleur = 0.1f;
 
+    [HideInInspector]
     public Color CouleurHerbe;
     public GameObject PrefabArbre;
 
+    [HideInInspector]
     public Color CouleurDesert;
 
     public int SpreadCount = 10;
+
+    [HideInInspector]
+    public GenerateTerrainTypes GenerateTerrainTypes;
 
     void Start()
     {
         Planete = FindObjectOfType<Planete>();
         ResteSurTerre = GetComponent<ResteSurTerre>();
+        GenerateTerrainTypes = FindObjectOfType<GenerateTerrainTypes>();
+
+        CouleurDesert = GenerateTerrainTypes.TerrainVariationColors[0].Color;
+        CouleurHerbe = GenerateTerrainTypes.TerrainVariationColors[1].Color;
     }
 
     void Update()
@@ -86,9 +95,11 @@ public class ExploseAuSolEnFlaqueDEau : MonoBehaviour
 
     void SpreadFlaque(int[] triangles, int t0, Vector3[] vertices, Color[] colors)
     {
-        var genTypes = FindObjectOfType<GenerateTerrainTypes>();
-        var t2ts = genTypes.VertexToSimilarVertices;
-        var v2t = genTypes.VertexToTriangleIndex;
+        GenerateTerrainTypes = FindObjectOfType<GenerateTerrainTypes>();
+        
+        // Watch out for threading
+        if (GenerateTerrainTypes.VertexToSimilarVertices == null || GenerateTerrainTypes.VertexToTriangleIndex == null)
+            return;
 
         var colored = new HashSet<int>();
         var newColored = new HashSet<int>();
@@ -100,7 +111,7 @@ public class ExploseAuSolEnFlaqueDEau : MonoBehaviour
             bool worked = false;
             foreach (var t in colored)
             {
-                foreach (var t2 in t2ts[t])
+                foreach (var t2 in GenerateTerrainTypes.VertexToSimilarVertices[t])
                 {
                     if (IsDesert(colors[t2]))
                     {
@@ -108,7 +119,7 @@ public class ExploseAuSolEnFlaqueDEau : MonoBehaviour
                     }
                     else
                     {
-                        SetFlaque(triangles, v2t[t2]/3*3, colors, newColored);
+                        SetFlaque(triangles, GenerateTerrainTypes.VertexToTriangleIndex[t2] / 3 * 3, colors, newColored);
                         worked = true;
                         if (--spread <= 0)
                             break;

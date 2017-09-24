@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Threading;
 using UnityEngine;
 
 public class GenerateTerrainTypes : MonoBehaviour
@@ -20,8 +22,12 @@ public class GenerateTerrainTypes : MonoBehaviour
 
     private Mesh _mesh;
 
+    [HideInInspector]
     public List<int>[] VertexToSimilarVertices;
+    [HideInInspector]
     public int[] VertexToTriangleIndex;
+
+    public bool ForceRegenerate;
 
     void BuildMeshLookupData(Vector3[] vertices, int[] triangles)
     {
@@ -62,15 +68,49 @@ public class GenerateTerrainTypes : MonoBehaviour
         if (uv != null && uv.Length == mesh.vertexCount) _mesh.uv = uv;
 
         var colors = new Color[mesh.vertexCount];
-        var chanceTotale = TerrainVariationColors.Sum(v => v.Chance);
 
+        if (ForceRegenerate || !File.Exists("TerrainColors.dat"))
+        {
+            GenerateColors(vertices, colors, radius);
+            var bytes = new byte[colors.Length*3];
+            for (var i = 0; i < colors.Length; i++)
+            {
+                var c = (Color32) colors[i];
+                bytes[i*3 + 0] = c.r;
+                bytes[i*3 + 1] = c.g;
+                bytes[i*3 + 2] = c.b;
+            }
+            File.WriteAllBytes("TerrainColors.dat", bytes);
+        }
+        else
+        {
+            var bytes = File.ReadAllBytes("TerrainColors.dat");
+            for (var i = 0; i < colors.Length; i++)
+            {
+                var c = new Color32(255, 255, 255, 255);
+                c.r = bytes[i * 3 + 0];
+                c.g = bytes[i * 3 + 1];
+                c.b = bytes[i * 3 + 2];
+                colors[i] = c;
+            }
+        }
+
+        _mesh.colors = colors;
+        TargetMesh.sharedMesh = _mesh;
+
+        new Thread(() => BuildMeshLookupData(vertices, triangles)).Start();
+    }
+
+    void GenerateColors(Vector3[] vertices, Color[] colors, float radius)
+    {
+        var chanceTotale = TerrainVariationColors.Sum(v => v.Chance);
         for (var i = 0; i < colors.Length; i++)
         {
             var v = vertices[i];
-            var noise = Noise(v/radius);
-            var chance = noise*chanceTotale;
+            var noise = Noise(v / radius);
+            var chance = noise * chanceTotale;
             for (var j = 0; j < TerrainVariationColors.Length; j++)
-                if (chance <= TerrainVariationColors[j].Chance || j == TerrainVariationColors.Length-1)
+                if (chance <= TerrainVariationColors[j].Chance || j == TerrainVariationColors.Length - 1)
                 {
                     colors[i] = TerrainVariationColors[j].Color;
                     break;
@@ -81,11 +121,6 @@ public class GenerateTerrainTypes : MonoBehaviour
                 }
             //colors[i] = TerrainVariationColors[Mathf.Clamp(Mathf.FloorToInt(noise * TerrainVariationColors.Length), 0, TerrainVariationColors.Length - 1)].Color;
         }
-
-        _mesh.colors = colors;
-        TargetMesh.sharedMesh = _mesh;
-
-        BuildMeshLookupData(vertices, triangles);
     }
 
     float Noise(Vector3 p)
