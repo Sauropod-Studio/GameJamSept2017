@@ -30,7 +30,7 @@ public class MoutonSePromene : MonoBehaviour
 
 	void Update()
 	{
-	    if (transform.parent != Planete.Objets || !ResteSurTerre.ToucheAuSol())
+	    if (IsSuspended() || IsFalling())
 	    {
 	        InitPositionDeReference();
             return;
@@ -60,10 +60,21 @@ public class MoutonSePromene : MonoBehaviour
         _positionDebut = Planete.GetPointSurTerre(transform.position);
     }
 
-    bool WantToMove()
+    public bool IsSuspended()
+    {
+        return transform.parent != Planete.Objets;
+    }
+
+    public bool IsFalling()
+    {
+        return !ResteSurTerre.ToucheAuSol();
+    }
+
+    public bool WantToMove()
     {
         var delta = _destination - transform.position;
-        return delta.sqrMagnitude >= 1E-6;
+        const float dMax = 0.1f;
+        return delta.sqrMagnitude >= dMax*dMax;
     }
 
     bool WantToRotate()
@@ -84,6 +95,11 @@ public class MoutonSePromene : MonoBehaviour
         {
             transform.position += delta / dist * Time.deltaTime * VitesseMax;
         }
+
+        ResteSurTerre.Ajuster();
+        
+        if (tRequis < Time.deltaTime)
+            _destination = transform.position;
     }
 
     void Rotate()
@@ -105,7 +121,7 @@ public class MoutonSePromene : MonoBehaviour
         _attente = Random.Range(AttenteMoyenne * 0.5f, AttenteMoyenne * 1.5f);
         _destination = _positionDebut + Random.insideUnitSphere * Random.Range(DeplacementMoyen * 0.5f, DeplacementMoyen * 1.5f);
         Vector3 up;
-        _destination = Planete.GetPointSurTerre(_destination, out up);
+        _destination = Planete.GetPointSurTerre(_destination, out up, -ResteSurTerre.Profondeur);
         _rotationVoulue = Quaternion.LookRotation(_destination - transform.position, up);
     }
 }

@@ -2,7 +2,6 @@
 
 public class Planete : MonoBehaviour
 {
-    public Transform Boule;
     public Transform Objets;
 
     public Vector3 GetPointSurTerre(Vector3 pointDansLEspace, float hauteur = 0)

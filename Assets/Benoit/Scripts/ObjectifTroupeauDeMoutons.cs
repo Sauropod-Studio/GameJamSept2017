@@ -1,13 +1,19 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class ObjectifTroupeauDeMoutons : MonoBehaviour
 {
+    [HideInInspector]
     public Transform[] MoutonsARegrouper;
-    public float DistanceVoulue = 3f;
+
+    public float DistanceVoulue = 10f;
     
-    //private Dictionary<Transform, int> _connected = new Dictionary<Transform, int>(); 
+    void Start()
+    {
+        MoutonsARegrouper = FindObjectsOfType<MoutonSePromene>().Select(m => m.transform).ToArray();
+    }
 
 	void Update()
     {
@@ -20,28 +26,6 @@ public class ObjectifTroupeauDeMoutons : MonoBehaviour
 
     bool Gagne()
     {
-        /*if (MoutonsARegrouper.Length == 0) return false;
-        
-        _connected.Clear();
-        foreach (Transform mouton in MoutonsARegrouper)
-            _connected.Add(mouton, _connected.Count);
-
-        foreach (Transform mouton in MoutonsARegrouper)
-        {
-            foreach (Transform mouton2 in MoutonsARegrouper)
-            {
-                if (_connected[mouton] != _connected[mouton2] &&
-                    (mouton.position - mouton2.position).sqrMagnitude < DistanceVoulue*DistanceVoulue)
-                {
-                }
-            }
-            if (connected)
-            {
-                _connected.Add(mouton);
-                break;
-            }
-        }
-        return !alone;*/
         foreach (Transform mouton in MoutonsARegrouper)
         {
             foreach (Transform mouton2 in MoutonsARegrouper)

@@ -3,25 +3,14 @@
 public class MakeBabies : MonoBehaviour {
     public bool testIt;
 
-    public bool liveOnLand;
-
     public float scaleReduction;
     public AnimationCurve movement;
     public float splitDuration;
     public float splitDistance;
 
-
     public void Spawn()
     {
-        if (liveOnLand)
-        {
-            Vector2 d = Random.insideUnitCircle;
-            splitDirection = transform.right * d.x +transform.forward * d.y;
-        }
-        else
-        {
-            splitDirection = Random.insideUnitSphere;
-        }
+        splitDirection = Random.insideUnitSphere;
         splitPosition = transform.position;
         timeAtSplit = Time.time;
         clone = GameObject.Instantiate(gameObject).transform;
